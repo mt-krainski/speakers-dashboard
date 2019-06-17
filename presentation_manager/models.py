@@ -40,5 +40,5 @@ class Presentation(models.Model):
             self.author.first_name is not None
             and self.author.last_name is not None
         ):
-            author = f"{self.author.first_name} {self.author_last_name}"
+            author = f"{self.author.first_name} {self.author.last_name}"
         return f"[{self.type.name}] {self.title} by {author}"
