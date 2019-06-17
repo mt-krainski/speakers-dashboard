@@ -9,27 +9,71 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-    ]
+    dependencies = [migrations.swappable_dependency(settings.AUTH_USER_MODEL)]
 
     operations = [
         migrations.CreateModel(
-            name='PresentationType',
+            name="PresentationType",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(help_text='Name of the presentation type.', max_length=200)),
-                ('duration', models.FloatField(help_text='Duration of a presentation of this type.')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        help_text="Name of the presentation type.",
+                        max_length=200,
+                    ),
+                ),
+                (
+                    "duration",
+                    models.FloatField(
+                        help_text="Duration of a presentation of this type."
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Presentation',
+            name="Presentation",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(help_text='Title of this presentation', max_length=200)),
-                ('file', models.FileField(upload_to='presentations')),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('type', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='presentation_manager.PresentationType')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(
+                        help_text="Title of this presentation", max_length=200
+                    ),
+                ),
+                ("file", models.FileField(upload_to="presentations")),
+                (
+                    "author",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "type",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="presentation_manager.PresentationType",
+                    ),
+                ),
             ],
         ),
     ]
