@@ -25,5 +25,5 @@ class Presentation(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
     file = models.FileField(
-        upload_to=PRESENTATION_DIR, validators=validate_presentation_file
+        upload_to=PRESENTATION_DIR, validators=[validate_presentation_file]
     )
