@@ -10,8 +10,11 @@ class PresentationType(models.Model):
         max_length=200, help_text="Name of the presentation type."
     )
     duration = models.FloatField(
-        help_text="Duration of a presentation of this type."
+        help_text="Duration of a presentation of this type [min.]."
     )
+
+    def __str__(self):
+        return f"{self.name} ({self.duration} min.)"
 
 
 class Presentation(models.Model):
@@ -25,5 +28,11 @@ class Presentation(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
     file = models.FileField(
-        upload_to=PRESENTATION_DIR, validators=[validate_presentation_file]
+        upload_to=PRESENTATION_DIR,
+        validators=[validate_presentation_file],
+        null=True,
+        blank=True,
     )
+
+    def __str__(self):
+        return f"[{self.type.name}] {self.title} by {self.author}"
