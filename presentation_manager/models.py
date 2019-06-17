@@ -35,4 +35,10 @@ class Presentation(models.Model):
     )
 
     def __str__(self):
-        return f"[{self.type.name}] {self.title} by {self.author}"
+        author = f"{self.author}"
+        if (
+            self.author.first_name is not None
+            and self.author.last_name is not None
+        ):
+            author = f"{self.author.first_name} {self.author_last_name}"
+        return f"[{self.type.name}] {self.title} by {author}"
