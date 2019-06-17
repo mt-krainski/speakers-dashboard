@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.db import models
 
-
-PRESENTATION_DIR = "presentations"
+from presentation_manager.choices import PRESENTATION_DIR
+from presentation_manager.validators import validate_presentation_file
 
 
 class PresentationType(models.Model):
@@ -24,4 +24,6 @@ class Presentation(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
-    file = models.FileField(upload_to=PRESENTATION_DIR)
+    file = models.FileField(
+        upload_to=PRESENTATION_DIR, validators=validate_presentation_file
+    )
