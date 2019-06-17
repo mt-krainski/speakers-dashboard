@@ -18,7 +18,7 @@ class Presentation(models.Model):
     title = models.CharField(
         max_length=200, help_text="Title of this presentation"
     )
-    type = models.ForeignKey(PresentationType, on_delete=models.SET_NULL)
+    type = models.ForeignKey(PresentationType, on_delete=models.SET_NULL, null=True, blank=True)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
