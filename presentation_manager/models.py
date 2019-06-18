@@ -9,7 +9,7 @@ class PresentationType(models.Model):
     name = models.CharField(
         max_length=200, help_text="Name of the presentation type."
     )
-    duration = models.FloatField(
+    duration = models.DurationField(
         help_text="Duration of a presentation of this type [min.]."
     )
 
