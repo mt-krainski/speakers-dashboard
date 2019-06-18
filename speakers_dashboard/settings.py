@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "menu",
     "crispy_forms",
+    "django.forms",
     "django_extensions",
     "utils",
     "presentation_manager",
@@ -78,7 +79,8 @@ WSGI_APPLICATION = "speakers_dashboard.wsgi.application"
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
-MEDIA_ROOT = "./media/"
+MEDIA_ROOT = ".media/"
+MEDIA_URL = "/media/"
 
 
 # Database

@@ -1,0 +1,33 @@
+<!-- templates/bistro/add.html -->
+
+{% extends 'utils/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %} Manage Presentation {% endblock %}
+
+{% block content %}
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form | crispy }}
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="alert alert-danger">
+                    {{ error|escape }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                {{ error|escape }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="row mt-2">
+        <div class="col-6">
+            <input class="btn btn-primary" type="submit" value="Submit">
+        </div>
+    </div>
+</form>
+{% endblock %}

@@ -6,7 +6,9 @@ from presentation_manager.validators import validate_presentation_file
 
 
 class PresentationType(models.Model):
-    name = models.CharField(max_length=200, help_text="Name of the presentation type.")
+    name = models.CharField(
+        max_length=200, help_text="Name of the presentation type."
+    )
     duration = models.DurationField(
         help_text="Duration of a presentation of this type [min.]."
     )
@@ -16,11 +18,15 @@ class PresentationType(models.Model):
 
 
 class Presentation(models.Model):
-    title = models.CharField(max_length=200, help_text="Title of this presentation")
+    title = models.CharField(
+        max_length=200, help_text="Title of this presentation"
+    )
     type = models.ForeignKey(
         PresentationType, on_delete=models.SET_NULL, null=True, blank=True
     )
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+    )
     file = models.FileField(
         upload_to=PRESENTATION_DIR,
         validators=[validate_presentation_file],
@@ -30,6 +36,10 @@ class Presentation(models.Model):
 
     def __str__(self):
         author = f"{self.author}"
-        if self.author.first_name is not None and self.author.last_name is not None:
+        if (
+            self.author.first_name is not None
+            and self.author.last_name is not None
+        ):
             author = f"{self.author.first_name} {self.author.last_name}"
-        return f"[{self.type.name}] '{self.title}' by {author}"
+        presentation_type = self.type.name if self.type is not None else "-"
+        return f"[{presentation_type}] '{self.title}' by {author}"
