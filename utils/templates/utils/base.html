@@ -1,0 +1,57 @@
+<!-- templates/utils/base.html -->
+<!DOCTYPE html>
+{% load static %}
+{% load menu %}
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+  <script src="{% static 'js/jquery-3.4.0.js' %}"></script>
+  <script src="{% static 'js/popper-1.11.0.js' %}"></script>
+  <script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+  <title>{% block title %} Speakers Dashboard {% endblock %}</title>
+  {% block head %} {% endblock %}
+</head>
+<body>
+  <main>
+    <div class="container">
+      <div class="row justify-content-center mt-4">
+        <div class="col-sm-12">
+          {% block menu %}
+            {% generate_menu %}
+            <nav class="navbar navbar-expand-lg navbar-dark bg-primary ">
+                <a class="navbar-brand" href="{% url 'home' %} ">Roy</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                  {% with menu=menus.main %}
+                    {% include "utils/navbar.html" %}
+                  {% endwith %}
+                </ul>
+              </div>
+            </nav>
+          {% endblock %}
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-12 mt-4">
+            {% block messages %}
+              {% for message in messages %}
+                <div class="alert {% if message.tags %} alert-{{ message.tags }} {% endif %}" >
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endblock %}
+
+            {% block content %}
+
+            {% endblock %}
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

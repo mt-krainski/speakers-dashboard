@@ -1,0 +1,26 @@
+<!-- templates/utils/home.html -->
+{% extends 'utils/base.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  <div class="row">
+    <div class="col-sm-6">
+      {% if user.profile %}
+        Welcome {{ user.profile.first_name }}
+      {% else %}
+        Welcome {{ user.username }}
+      {% endif %}
+    </div>
+  </div>
+{% else %}
+  <div class="row">
+    <div class="col-sm-8 my-auto">
+      You are not logged in
+    </div>
+      <div class="col-sm-4 text-right">
+    </div>
+  </div>
+{% endif %}
+{% endblock %}

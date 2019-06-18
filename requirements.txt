@@ -1,3 +1,5 @@
 black
 django
-django - extensions
+django-extensions
+django-crispy-forms
+django-simple-menu
