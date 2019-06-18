@@ -16,9 +16,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 null=True,
                 upload_to="presentations",
-                validators=[
-                    presentation_manager.validators.validate_presentation_file
-                ],
+                validators=[presentation_manager.validators.validate_presentation_file],
             ),
         ),
         migrations.AlterField(

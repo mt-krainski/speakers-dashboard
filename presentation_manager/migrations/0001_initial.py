@@ -27,8 +27,7 @@ class Migration(migrations.Migration):
                 (
                     "name",
                     models.CharField(
-                        help_text="Name of the presentation type.",
-                        max_length=200,
+                        help_text="Name of the presentation type.", max_length=200
                     ),
                 ),
                 (

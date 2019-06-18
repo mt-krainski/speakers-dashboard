@@ -5,14 +5,14 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('presentation_manager', '0002_auto_20190617_2209'),
-    ]
+    dependencies = [("presentation_manager", "0002_auto_20190617_2209")]
 
     operations = [
         migrations.AlterField(
-            model_name='presentationtype',
-            name='duration',
-            field=models.DurationField(help_text='Duration of a presentation of this type [min.].'),
-        ),
+            model_name="presentationtype",
+            name="duration",
+            field=models.DurationField(
+                help_text="Duration of a presentation of this type [min.]."
+            ),
+        )
     ]
