@@ -1,3 +1,4 @@
+import uuid
 from django.conf import settings
 from django.db import models
 
@@ -10,14 +11,17 @@ class PresentationType(models.Model):
         max_length=200, help_text="Name of the presentation type."
     )
     duration = models.DurationField(
-        help_text="Duration of a presentation of this type [min.]."
+        help_text="Duration of a presentation of this type."
     )
 
     def __str__(self):
-        return f"{self.name} ({self.duration} min.)"
+        return f"{self.name} ({self.duration})"
 
 
 class Presentation(models.Model):
+    uuid = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False
+    )
     title = models.CharField(
         max_length=200, help_text="Title of this presentation"
     )
