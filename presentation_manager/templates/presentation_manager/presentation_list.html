@@ -1,0 +1,44 @@
+<!-- templates/bistro/add.html -->
+
+{% extends 'utils/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %} List Presentations {% endblock %}
+
+{% block content %}
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Title</th>
+        <th scope="col">Type</th>
+        <th scope="col">Duration</th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <ul>
+    {% for p in object_list %}
+        <tr>
+            <td> <em> {{ p.title }} </em> </td>
+            <td> {{ p.type.name }} </td>
+            <td> {{ p.type.duration }} </td>
+            <td>
+                <a
+                    role="button"
+                    class="btn btn-primary btn-sm
+                        {% if not has_change_permission %}
+                            disabled
+                        {% endif %}"
+                    href="{% url 'presentation-manager:presentation-edit' p.uuid %}"
+                    {% if not has_change_permission %} aria-disabled="true" {% endif %}
+                >
+                    Edit
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </ul>
+    </tbody>
+</table>
+{% endblock %}

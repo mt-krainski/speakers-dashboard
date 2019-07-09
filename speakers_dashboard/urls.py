@@ -24,7 +24,7 @@ urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
     path(
         "presentation_manager/",
-        include("presentation_manager.urls", namespace="presentation_manager"),
+        include("presentation_manager.urls", namespace="presentation-manager"),
     ),
     path(
         "", TemplateView.as_view(template_name="utils/home.html"), name="home"
