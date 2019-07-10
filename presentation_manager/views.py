@@ -1,12 +1,19 @@
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.http import (
+    HttpResponseRedirect,
+    HttpResponseForbidden,
+    HttpResponse,
+)
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView
 
 from presentation_manager.forms import PresentationForm
 from presentation_manager.models import Presentation
+from presentation_manager.utils import launch_presentation
 
 
 @login_required
@@ -19,16 +26,28 @@ def presentation_edit_view(request, uuid=None):
 
     if request.method == "POST":
 
-        form = PresentationForm(request.POST, request.FILES, user=request.user)
+        form = PresentationForm(
+            request.POST,
+            request.FILES,
+            user=request.user,
+            instance=presentation,
+        )
 
         if form.is_valid():
             form.save()
 
-            messages.add_message(
-                request, messages.INFO, f"Presentation has been added!"
-            )
+            if presentation is None:
+                messages.add_message(
+                    request, messages.INFO, f"Presentation has been added!"
+                )
+            else:
+                messages.add_message(
+                    request, messages.INFO, f"Presentation has been updated!"
+                )
 
-            return HttpResponseRedirect(reverse("home"))
+            return HttpResponseRedirect(
+                reverse("presentation-manager:presentation-list")
+            )
 
     else:
         form = PresentationForm(user=request.user, instance=presentation)
@@ -39,6 +58,19 @@ def presentation_edit_view(request, uuid=None):
     )
 
 
+@staff_member_required
+def launch_presentation_view(request, uuid):
+    if request.method != "GET":
+        return HttpResponseForbidden()
+
+    presentation = get_object_or_404(Presentation, uuid=uuid)
+
+    launch_presentation(presentation)
+
+    return HttpResponse(status="200")
+
+
+@method_decorator(login_required, name="dispatch")
 class PresentationListView(ListView):
 
     model = Presentation

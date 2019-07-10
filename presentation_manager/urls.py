@@ -1,7 +1,10 @@
 from django.urls import path
 
 from presentation_manager import views
-from presentation_manager.views import PresentationListView
+from presentation_manager.views import (
+    PresentationListView,
+    launch_presentation_view,
+)
 
 app_name = "bistro"
 
@@ -20,5 +23,10 @@ urlpatterns = [
         "presentation_list",
         PresentationListView.as_view(),
         name="presentation-list",
+    ),
+    path(
+        "launch_presentation/<uuid:uuid>",
+        launch_presentation_view,
+        name="launch-presentation",
     ),
 ]

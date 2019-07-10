@@ -38,12 +38,17 @@ class Presentation(models.Model):
         blank=True,
     )
 
-    def __str__(self):
+    def get_author_display(self):
         author = f"{self.author}"
-        if (
-            self.author.first_name is not None
-            and self.author.last_name is not None
+        if not (
+            self.author.first_name is None or self.author.first_name == ""
+        ) and not (
+            self.author.last_name is None or self.author.last_name == ""
         ):
             author = f"{self.author.first_name} {self.author.last_name}"
+        return author
+
+    def __str__(self):
+        author = self.get_author_display()
         presentation_type = self.type.name if self.type is not None else "-"
         return f"[{presentation_type}] '{self.title}' by {author}"
