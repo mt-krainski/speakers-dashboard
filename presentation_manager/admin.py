@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.urls import reverse
-from django.utils.html import escape
 
 from presentation_manager.models import Presentation, PresentationType
 from utils.html_utils import render_link, render_button
