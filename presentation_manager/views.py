@@ -38,11 +38,11 @@ def presentation_edit_view(request, uuid=None):
 
             if presentation is None:
                 messages.add_message(
-                    request, messages.INFO, f"Presentation has been added!"
+                    request, messages.INFO, "Presentation has been added!"
                 )
             else:
                 messages.add_message(
-                    request, messages.INFO, f"Presentation has been updated!"
+                    request, messages.INFO, "Presentation has been updated!"
                 )
 
             return HttpResponseRedirect(
