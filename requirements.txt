@@ -3,4 +3,5 @@ django
 django-extensions
 django-crispy-forms
 django-simple-menu
+python-githooks
 uuid

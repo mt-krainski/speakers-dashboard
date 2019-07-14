@@ -3,7 +3,7 @@ from django.conf import settings
 from django.db import models
 
 from presentation_manager.choices import PRESENTATION_DIR
-from presentation_manager.validators import validate_presentation_file
+from presentation_manager.formats import formats
 
 
 class PresentationType(models.Model):
@@ -33,7 +33,7 @@ class Presentation(models.Model):
     )
     file = models.FileField(
         upload_to=PRESENTATION_DIR,
-        validators=[validate_presentation_file],
+        validators=[formats.validate_format],
         null=True,
         blank=True,
     )
