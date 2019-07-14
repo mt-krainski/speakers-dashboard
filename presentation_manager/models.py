@@ -3,7 +3,12 @@ from django.conf import settings
 from django.db import models
 
 from presentation_manager.choices import PRESENTATION_DIR
-from presentation_manager.formats import formats
+from presentation_manager.formats import (
+    formats,
+    FORMATS_CHOICES,
+    get_format_hash_from_file,
+    FORMATS,
+)
 
 
 class PresentationType(models.Model):
@@ -37,6 +42,26 @@ class Presentation(models.Model):
         null=True,
         blank=True,
     )
+    format = models.CharField(
+        max_length=32, choices=FORMATS_CHOICES, null=True
+    )
+
+    def save(self, *args, **kwargs):
+        if self.file is not None:
+            self.format = get_format_hash_from_file(self.file)
+        return super().save(*args, **kwargs)
+
+    @property
+    def format_class(self):
+        if self.format is None:
+            return None
+        return FORMATS[self.format]
+
+    @property
+    def launch_command(self):
+        if self.format is None:
+            return None
+        return FORMATS[self.format].get_command(self)
 
     def get_author_display(self):
         author = f"{self.author}"

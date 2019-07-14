@@ -1,4 +1,26 @@
 from abc import ABCMeta, abstractmethod
+from hashlib import md5
+
+
+def _get_hash(format_):
+    if isinstance(format_, BasePresentationFormat):
+        format_ = format_.__name__
+    return md5(format_.__name__.encode()).hexdigest()
+
+
+def get_format_hash_from_file(file):
+    if file is None or file == "":
+        return None
+
+    from django.core.exceptions import ValidationError
+
+    for cls in BasePresentationFormat.__subclasses__():
+        try:
+            cls.validate_presentation_file(file)
+            return _get_hash(cls)
+        except ValidationError:
+            pass
+    raise ValueError("Unsupported file extension!")
 
 
 def validate_format(file):
