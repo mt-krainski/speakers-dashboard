@@ -134,4 +134,9 @@ STATIC_URL = "/static/"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
-PRESENTATION_COMMAND = "pdfpc"
+PDFPC_SWITCH_SCREENS = False
+
+try:
+    from .local_settings import *
+except ModuleNotFoundError:
+    pass

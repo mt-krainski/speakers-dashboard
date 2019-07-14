@@ -1,6 +1,9 @@
 from abc import ABCMeta, abstractmethod
 from hashlib import md5
 
+from django.conf import settings
+from django.utils.timezone import localtime
+
 
 def _get_hash(format_):
     if isinstance(format_, BasePresentationFormat):
@@ -59,6 +62,7 @@ class BasePresentationFormat(metaclass=ABCMeta):
 
 class PdfPresentationFormat(BasePresentationFormat):
 
+    _pdfpc_time_format = "%H:%M"
     _name = "PDF"
     _presentation_command = "pdfpc"
     _valid_file_extensions = [".pdf"]
@@ -86,7 +90,24 @@ class PdfPresentationFormat(BasePresentationFormat):
             hours, remainder = divmod(s, 3600)
             minutes, _ = divmod(remainder, 60)
             duration_str = f"{60 * hours + minutes:02}"
-            command += ["-d", duration_str]
+            command += ["--duration", duration_str]
+
+        if (
+            presentation.start_time is not None
+            and presentation.end_time is not None
+        ):
+            local_start_time = localtime(presentation.start_time)
+            local_end_time = localtime(presentation.end_time)
+            command += [
+                "--start-time",
+                local_start_time.strftime(cls._pdfpc_time_format),
+                "--end-time",
+                local_end_time.strftime(cls._pdfpc_time_format),
+            ]
+
+        if settings.PDFPC_SWITCH_SCREENS:
+            command += ["--switch-screens"]
+
         return command
 
     @classmethod

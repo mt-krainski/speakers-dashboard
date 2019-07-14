@@ -14,9 +14,23 @@ class PresentationAdmin(admin.ModelAdmin):
         "title",
         "author_link",
         "type_name",
+        "format",
         "type_duration",
+        "start_time",
+        "end_time",
+        "has_file",
         "launch_button",
     )
+
+    fields = (
+        ("title", "author", "type"),
+        ("file", "format"),
+        ("start_time", "end_time"),
+    )
+
+    readonly_fields = ("format",)
+
+    ordering = ("start_time",)
 
     def author_link(self, obj):
         return render_link(
@@ -39,13 +53,19 @@ class PresentationAdmin(admin.ModelAdmin):
     type_duration.short_description = "Duration"
     type_duration.admin_order_field = "type__duration"
 
+    def has_file(self, obj):
+        return obj.has_file
+
+    has_file.boolean = True
+    has_file.short_description = "File"
+
     def launch_button(self, obj):
         return render_button(
             reverse(
                 "presentation-manager:launch-presentation", args=(obj.uuid,)
             ),
             "Launch",
-            disabled=not bool(obj.file),  # https://stackoverflow.com/a/8850547
+            disabled=not obj.has_file,
         )
 
     launch_button.short_description = ""

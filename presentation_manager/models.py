@@ -1,5 +1,7 @@
 import uuid
 from django.conf import settings
+from django.contrib import messages
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from presentation_manager.choices import PRESENTATION_DIR
@@ -27,6 +29,8 @@ class Presentation(models.Model):
     uuid = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False
     )
+    start_time = models.DateTimeField(null=True, blank=True)
+    end_time = models.DateTimeField(null=True, blank=True)
     title = models.CharField(
         max_length=200, help_text="Title of this presentation"
     )
@@ -43,7 +47,7 @@ class Presentation(models.Model):
         blank=True,
     )
     format = models.CharField(
-        max_length=32, choices=FORMATS_CHOICES, null=True
+        max_length=32, choices=FORMATS_CHOICES, null=True, blank=True
     )
 
     def save(self, *args, **kwargs):
@@ -62,6 +66,35 @@ class Presentation(models.Model):
         if self.format is None:
             return None
         return FORMATS[self.format].get_command(self)
+
+    @property
+    def has_file(self):
+        return bool(self.file)  # https://stackoverflow.com/a/8850547
+
+    def clean(self):
+        errors = {}
+        if self.start_time is None and self.end_time is not None:
+            errors[
+                "start_time"
+            ] = "This value can't be empty if End time is provided"
+
+        if (
+            self.start_time is not None
+            and self.end_time is not None
+            and self.end_time < self.start_time
+        ):
+            errors["start_time"] = "Start time has to be before end time."
+            errors["end_time"] = "End time has to be after start time."
+
+        if (
+            self.end_time is None
+            and self.start_time is not None
+            and self.type is not None
+        ):
+            self.end_time = self.start_time + self.type.duration
+
+        if errors:
+            raise ValidationError(errors)
 
     def get_author_display(self):
         author = f"{self.author}"
