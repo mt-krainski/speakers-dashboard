@@ -14,6 +14,7 @@ FORMATS_CHOICES = [
 
 __all__ = (
     "validate_format",
-    "get_format_hash_from_file" "FORMATS",
+    "get_format_hash_from_file",
+    "FORMATS",
     "FORMATS_CHOICES",
 )
