@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import Max
 
 from presentation_manager.choices import PRESENTATION_DIR
 from presentation_manager.formats import (
@@ -11,6 +12,10 @@ from presentation_manager.formats import (
     get_format_hash_from_file,
     FORMATS,
 )
+
+
+def get_presentation_last_order_value():
+    return Presentation.objects.aggregate(value=Max("order"))["value"]
 
 
 class PresentationType(models.Model):
@@ -26,19 +31,12 @@ class PresentationType(models.Model):
 
 
 class Presentation(models.Model):
-    uuid = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False
-    )
-    start_time = models.DateTimeField(null=True, blank=True)
-    end_time = models.DateTimeField(null=True, blank=True)
-    title = models.CharField(
-        max_length=200, help_text="Title of this presentation"
-    )
-    type = models.ForeignKey(
-        PresentationType, on_delete=models.SET_NULL, null=True, blank=True
-    )
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+    )
+    end_time = models.DateTimeField(null=True, blank=True)
+    format = models.CharField(
+        max_length=32, choices=FORMATS_CHOICES, null=True, blank=True
     )
     file = models.FileField(
         upload_to=PRESENTATION_DIR,
@@ -46,9 +44,17 @@ class Presentation(models.Model):
         null=True,
         blank=True,
     )
-    format = models.CharField(
-        max_length=32, choices=FORMATS_CHOICES, null=True, blank=True
+    start_time = models.DateTimeField(null=True, blank=True)
+    title = models.CharField(
+        max_length=200, help_text="Title of this presentation"
     )
+    type = models.ForeignKey(
+        PresentationType, on_delete=models.SET_NULL, null=True, blank=True
+    )
+    uuid = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False
+    )
+    order = models.IntegerField(default=-1)
 
     def save(self, *args, **kwargs):
         if self.file is not None:
@@ -93,6 +99,11 @@ class Presentation(models.Model):
         ):
             self.end_time = self.start_time + self.type.duration
 
+        if self.order == -1:
+            self.order = (
+                Presentation.objects.aggregate(value=Max("order"))["value"] + 1
+            )
+
         if errors:
             raise ValidationError(errors)
 
@@ -110,3 +121,7 @@ class Presentation(models.Model):
         author = self.get_author_display()
         presentation_type = self.type.name if self.type is not None else "-"
         return f"[{presentation_type}] '{self.title}' by {author}"
+
+    class Meta:
+
+        ordering = ("order",)

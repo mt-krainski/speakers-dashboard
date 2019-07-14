@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "django.forms",
     "django_extensions",
+    "adminsortable2",
     "utils",
     "presentation_manager",
 ]

@@ -1,4 +1,6 @@
+from adminsortable2.admin import SortableAdminMixin
 from django.contrib import admin
+from django.db import transaction
 from django.urls import reverse
 
 from presentation_manager.models import Presentation, PresentationType
@@ -8,7 +10,9 @@ admin.site.register(PresentationType)
 
 
 @admin.register(Presentation)
-class PresentationAdmin(admin.ModelAdmin):
+class PresentationAdmin(SortableAdminMixin, admin.ModelAdmin):
+
+    actions = ("reorder_by_start_time",)
 
     list_display = (
         "title",
@@ -29,8 +33,6 @@ class PresentationAdmin(admin.ModelAdmin):
     )
 
     readonly_fields = ("format",)
-
-    ordering = ("start_time",)
 
     def author_link(self, obj):
         return render_link(
@@ -69,3 +71,16 @@ class PresentationAdmin(admin.ModelAdmin):
         )
 
     launch_button.short_description = ""
+
+    def reorder_by_start_time(self, reqest, queryset):
+        queryset = queryset.order_by("start_time")
+        current_order = list(queryset.values_list("order", flat=True))
+        current_order_sorted = sorted(current_order)
+        with transaction.atomic():
+            for item in queryset.all():
+                item.order = current_order_sorted.pop(0)
+                item.save()
+
+    reorder_by_start_time.short_description = (
+        "Reorder selected presentations by their Start Time"
+    )
