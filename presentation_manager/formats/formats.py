@@ -2,6 +2,11 @@ from abc import ABCMeta, abstractmethod
 
 
 def validate_format(file):
+    """This will try to validate the input file against all known formats.
+
+    Format is known when it's implemented as a subclass of
+    BasePresentationFormat below.
+    """
     from django.core.exceptions import ValidationError
 
     for cls in BasePresentationFormat.__subclasses__():
@@ -38,6 +43,7 @@ class PdfPresentationFormat(BasePresentationFormat):
 
     @classmethod
     def validate_presentation_file(cls, file):
+        """Check if file has pdf extension."""
         import os
         from django.core.exceptions import ValidationError
 
@@ -47,6 +53,7 @@ class PdfPresentationFormat(BasePresentationFormat):
 
     @classmethod
     def get_command(cls, presentation):
+        """Return a command to launch the presentation."""
         from ..models import Presentation
 
         if not isinstance(presentation, Presentation):
