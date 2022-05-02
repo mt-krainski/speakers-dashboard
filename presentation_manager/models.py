@@ -100,8 +100,11 @@ class Presentation(models.Model):
             self.end_time = self.start_time + self.type.duration
 
         if self.order == -1:
+            existing_presentations_order = Presentation.objects.aggregate(value=Max("order"))["value"]
+            if existing_presentations_order is None:
+                existing_presentations_order = 0
             self.order = (
-                Presentation.objects.aggregate(value=Max("order"))["value"] + 1
+                existing_presentations_order + 1
             )
 
         if errors:
