@@ -1,8 +1,0 @@
-black
-django
-django-admin-sortable2
-django-extensions
-django-crispy-forms
-django-simple-menu
-python-githooks
-uuid
